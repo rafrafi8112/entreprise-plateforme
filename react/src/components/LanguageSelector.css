@@ -1,0 +1,69 @@
+/* LanguageSelector.css */
+@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css');
+.language-selector {
+    position: absolute; /* Position it relative to the parent container */
+    top: 20px; /* Adjust as needed to fit your layout */
+    right: 20px; /* Adjust as needed to fit your layout */
+    z-index: 100; /* Ensures it's above other elements */
+  }
+  
+  .selected-language {
+    cursor: pointer;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    font-weight: bold; /* Make the text bold */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .selected-language:after {
+    content: '\25BC'; /* Downward arrow */
+    margin-left: 8px;
+  }
+  
+  .language-list {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 160px; /* Set a minimum width */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border: none;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden; /* Ensures the border radius applies to children */
+  }
+  
+  .language-selector:hover .language-list {
+    display: block; /* Display the list on hover */
+  }
+  
+  .language-list li {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #333333;
+  }
+  
+  .language-list li:not(:last-child) {
+    border-bottom: 1px solid #eeeeee; /* Separator between items */
+  }
+  
+  .language-list li:hover {
+    background-color: #f7f7f7; /* Light grey background on hover */
+    color: #1a73e8; /* Highlight text color on hover */
+  }
+  .en:before {
+    background-image: url(https://www.countryflags.io/us/flat/32.png);
+}
+.selected-lang::before{
+    background-image: url(https://www.countryflags.io/us/flat/32.png);
+}

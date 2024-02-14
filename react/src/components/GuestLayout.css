@@ -1,0 +1,41 @@
+/* GuestLayout.css */
+.guest-layout {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #333;
+    color: white;
+    padding: 1em;
+  }
+  
+  .sidebar nav a {
+    display: block;
+    padding: 0.5em 0;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    background-color: #f5f5f5;
+  }
+  
+  .header {
+    background-color: #eee;
+    padding: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header-actions a {
+    padding: 0.5em 1em;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.25em;
+  }
+  
