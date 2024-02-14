@@ -33,40 +33,78 @@ const router = createBrowserRouter([
             },
             {
                 path: '/rooms',
-                element: <Rooms/>
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                                <Rooms/>
+                    </ProtectedRoute>
+                    ) ,
             },
             {
                 path: '/rooms/new',
-                element: <RoomForm key="roomCreate" />
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                             <RoomForm key="roomCreate" />
+                    </ProtectedRoute>
+                    ) ,
             },
             {
                 path: '/rooms/:id',
-                element: <RoomForm key="roomUpdate" />
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                            <RoomForm key="roomUpdate" />
+                    </ProtectedRoute>
+                    ) ,
             },
             {
                 path: '/users',
-                element: <Users/>
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                           <Users/>
+                    </ProtectedRoute>
+                    ) ,
             },
 
             {
                 path: '/users/new',
-                element: <UserForm key="userCreate" />
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                           <UserForm key="userCreate" />
+                    </ProtectedRoute>
+                    ) ,
             },
             {
                 path: '/users/:id',
-                element: <UserForm key="userUpdate" />
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                          <UserForm key="userUpdate" />
+                    </ProtectedRoute>
+                    ) ,
             },
             {
                 path: '/reservations',
-                element: <Reservations/>
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                          <Reservations/>
+                    </ProtectedRoute>
+                    ) ,
             },
             {
                 path: '/reservations/new',
-                element: <ReservationsForm key="reservationCreate" />
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <ReservationsForm key="reservationCreate" />
+                    </ProtectedRoute>
+                    ) ,
+                
             },
             {
                 path: '/reservations/:id',
-                element: <ReservationsForm key="reservationUpdate" />
+               
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        element: <ReservationsForm key="reservationUpdate" />
+                    </ProtectedRoute>
+                    ) ,
             },
         ]
     },

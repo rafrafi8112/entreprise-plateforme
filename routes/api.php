@@ -3,6 +3,11 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoomController;
+
+use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\ProjectMemberController;
+use App\Http\Controllers\Api\TaskController;
+
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Auth\SocialController;
 use Laravel\Socialite\Facades\Socialite;
@@ -29,6 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/users', UserController::class);
         Route::apiResource('/rooms', RoomController::class);
         Route::apiResource('/reservations', ReservationController::class);
+
+        Route::apiResource('/projects', ProjectController::class);
+        Route::apiResource('/project-members', ProjectMemberController::class);
+        Route::apiResource('tasks', TaskController::class);
+        
     });
 
   
