@@ -34,6 +34,7 @@ class StoreUserRequest extends FormRequest
                     ->symbols(),
             ],
             'group' => 'required|string',
+            
         ];
     }
 }

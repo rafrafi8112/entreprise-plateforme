@@ -13,6 +13,8 @@ import Reservations from "./views/Reservations.jsx";
 import ReservationsForm from "./views/ReservationsForm.jsx";
 import UserLayout from "./components/UserLayout.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import Projects from "./Projectviews/Projects.jsx";
+import ProjectsForm from "./Projectviews/ProjectsForm.jsx";
 const router = createBrowserRouter([
     {
         path: '/',
@@ -103,6 +105,31 @@ const router = createBrowserRouter([
                 element:(
                     <ProtectedRoute allowedRoles={['admin']}>
                         element: <ReservationsForm key="reservationUpdate" />
+                    </ProtectedRoute>
+                    ) ,
+            },
+            {
+                path: '/projects',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                          <Projects/>
+                    </ProtectedRoute>
+                    ) ,
+            },
+            {
+                path: '/projects/new',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <ProjectsForm key="projectCreate" />
+                    </ProtectedRoute>
+                    ) ,
+                
+            },
+            {
+                path: '/projects/:id',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        element: <ProjectsForm key="projectUpdate" />
                     </ProtectedRoute>
                     ) ,
             },

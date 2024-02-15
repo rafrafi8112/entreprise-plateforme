@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Project;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
 use Illuminate\Http\Response;
 
 class ProjectController extends Controller
@@ -12,8 +14,8 @@ class ProjectController extends Controller
     // Display a listing of projects
     public function index()
     {
-        $projects = Project::all();
-        return response()->json($projects);
+        $projects = Project::with(['manager', 'members', 'tasks'])->get();
+        return ProjectResource::collection($projects);
     }
 
     // Store a newly created project
@@ -26,7 +28,7 @@ class ProjectController extends Controller
     // Display the specified project
     public function show(Project $project)
     {
-        return response()->json($project);
+        return new ProjectResource($project);
     }
 
     // Update the specified project

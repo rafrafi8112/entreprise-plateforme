@@ -32,6 +32,7 @@ export default function DefaultLayout() {
                 <Link to="/rooms"><MdRoomPreferences style={{ width: '20px', height: '20px' }}/>Rooms</Link>
                 <Link to="/users"><FaUsers style={{ width: '20px', height: '20px' }} /> Users</Link>
                 <Link to="/reservations"><BsCalendarDateFill style={{ width: '20px', height: '20px' }} /> Reservations</Link>
+                <Link to="/projects"><BsCalendarDateFill style={{ width: '20px', height: '20px' }} /> Projects</Link>
               
             </aside>
             <div className="content">

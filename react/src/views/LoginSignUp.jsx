@@ -49,6 +49,8 @@ const LoginSignUp = () => {
                 setToken(data.token);
                 // Stockez l'ID de l'utilisateur dans localStorage
                 localStorage.setItem('userId', String(data.user.id));
+                   // Stockez le role  de l'utilisateur dans localStorage
+                   localStorage.setItem('userole', String(data.user.role));
 
                 // Récupérez l'ID de l'utilisateur depuis localStorage pour l'afficher
                 const userId = localStorage.getItem('userId');
