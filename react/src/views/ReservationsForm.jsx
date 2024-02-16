@@ -169,7 +169,7 @@ export default function ReservationsForm() {
                           // Get current date and time
                           const startDateTime = new Date(reservation.start_time);
                           const endDateTime = new Date(reservation.end_time);
-                          const attendeeEmailsArray2 = attendees.split(',').map(email => ({ email: email.trim() }));
+                          
                           // Create an event object
                           var event = {
                             'summary': reservation.name,
@@ -258,7 +258,7 @@ export default function ReservationsForm() {
 
                         
 
-                                <select value={attendees} onChange={ev => setAttendees(ev.target.value)}>
+                        <select className="select-room" value={attendees} onChange={ev => setAttendees(ev.target.value)}>
                             <option value="">Select Group</option>
                             <option value="TAC-TIC">TAC-TIC</option>
                             <option value="Smart-Advising">Smart-Advising</option>

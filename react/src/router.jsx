@@ -15,6 +15,8 @@ import UserLayout from "./components/UserLayout.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Projects from "./Projectviews/Projects.jsx";
 import ProjectsForm from "./Projectviews/ProjectsForm.jsx";
+import ProjectMembers from "./Projectviews/ProjectMembers.jsx";
+import ProjectMembersForm from "./Projectviews/ProjectMembersForm.jsx";
 const router = createBrowserRouter([
     {
         path: '/',
@@ -130,6 +132,31 @@ const router = createBrowserRouter([
                 element:(
                     <ProtectedRoute allowedRoles={['admin']}>
                         element: <ProjectsForm key="projectUpdate" />
+                    </ProtectedRoute>
+                    ) ,
+            },
+            {
+                path: '/project-members',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                          <ProjectMembers/>
+                    </ProtectedRoute>
+                    ) ,
+            },
+            {
+                path: '/project-members/new',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <ProjectMembersForm key="ProjectMemberCreate" />
+                    </ProtectedRoute>
+                    ) ,
+                
+            },
+            {
+                path: '/project-members/:id',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        element: <ProjectMembersForm key="ProjectMemberUpdate" />
                     </ProtectedRoute>
                     ) ,
             },

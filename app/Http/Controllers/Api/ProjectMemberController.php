@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\ProjectMember;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectMemberRequest;
 use App\Http\Requests\UpdateProjectMemberRequest;
+use App\Http\Resources\ProjectMemberResource;
 use Illuminate\Http\Response;
 
 class ProjectMemberController extends Controller
@@ -12,8 +14,8 @@ class ProjectMemberController extends Controller
     // Display a listing of project members
     public function index()
     {
-        $projectMembers = ProjectMember::all();
-        return response()->json($projectMembers);
+        $projectMembers = ProjectMember::with(['project', 'user'])->get();
+        return ProjectMemberResource::collection($projectMembers);
     }
 
     // Store a newly added project member

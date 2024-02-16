@@ -17,7 +17,7 @@ class StoreProjectMemberRequest extends FormRequest
         return [
             'project_id' => 'required|exists:projects,id',
             'user_id' => 'required|exists:users,id',
-            'role' => 'nullable|string|max:255',
+            'role' => 'required|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
         ];
