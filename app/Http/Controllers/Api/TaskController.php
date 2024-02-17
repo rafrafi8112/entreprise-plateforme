@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Task;
+use App\Models\User;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 use Illuminate\Http\Response;
 
 class TaskController extends Controller
@@ -12,8 +15,8 @@ class TaskController extends Controller
     // Display a listing of tasks
     public function index()
     {
-        $tasks = Task::all();
-        return response()->json($tasks);
+        $tasks = Task::with(['project', 'assignedTo'])->get();
+        return TaskResource::collection($tasks);
     }
 
     // Store a newly created task
@@ -42,4 +45,5 @@ class TaskController extends Controller
         $task->delete();
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
+    
 }

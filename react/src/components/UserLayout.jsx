@@ -28,7 +28,8 @@ export default function UserLayout() {
         <div id="defaultLayout">
             <aside>
                 <h2 id="heside"style={{ color:'white'}}>TAC-TIC</h2>
-                <Link to="/dashboard" ><FaHome style={{ width: '20px', height: '20px' }}/> Dashboard</Link>
+                <Link to="/tasksUser" ><FaHome style={{ width: '20px', height: '20px' }}/> Dashboard</Link>
+                <Link to="/tasksUser" ><FaHome style={{ width: '20px', height: '20px' }}/> Dashboard</Link>
                 
             </aside>
             <div className="content">

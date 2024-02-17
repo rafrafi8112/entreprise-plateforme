@@ -1,8 +1,8 @@
 import {Link, Navigate, Outlet} from "react-router-dom";
 import {useStateContext} from "../context/ContextProvider";
 import axiosClient from "../axios-client.js";
-
-import {FaHome, FaUsers,FaRProject,FaUserShield} from "react-icons/fa";
+import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import {FaHome, FaUsers,FaRProject,FaUserShield,FaTasks} from "react-icons/fa";
 import { MdRoomPreferences } from "react-icons/md";
 import {BsCalendarDateFill} from "react-icons/bs";
 
@@ -34,6 +34,7 @@ export default function DefaultLayout() {
                 <Link to="/reservations"><BsCalendarDateFill style={{ width: '20px', height: '20px' }} /> Reservations</Link>
                 <Link to="/projects"><FaRProject   style={{ width: '20px', height: '20px' }} /> Projects</Link>
                 <Link to="/project-members"><FaUserShield style={{ width: '20px', height: '20px' }} /> project Members</Link>
+                <Link to="/tasks"><FaTasks style={{ width: '20px', height: '20px' }} /> TASKES</Link>
               
             </aside>
             <div className="content">

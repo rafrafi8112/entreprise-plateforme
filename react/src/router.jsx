@@ -17,6 +17,12 @@ import Projects from "./Projectviews/Projects.jsx";
 import ProjectsForm from "./Projectviews/ProjectsForm.jsx";
 import ProjectMembers from "./Projectviews/ProjectMembers.jsx";
 import ProjectMembersForm from "./Projectviews/ProjectMembersForm.jsx";
+import Taskes from "./Projectviews/Taskes.jsx";
+import TaskesForm from "./Projectviews/TaskesForm.jsx";
+import UserTaskes from "./Projectviews/UserTaskes.jsx";
+import UserTaskesForm from "./Projectviews/UserTaskesForm.jsx";
+
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -160,16 +166,39 @@ const router = createBrowserRouter([
                     </ProtectedRoute>
                     ) ,
             },
+            {
+                path: '/tasks',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                          <Taskes/>
+                    </ProtectedRoute>
+                    ) ,
+            },
+            {
+                path: '/tasks/new',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <TaskesForm key="TaskCreate" />
+                    </ProtectedRoute>
+                    ) ,
+                
+            },
+            {
+                path: '/tasks/:id',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        element: <TaskesForm key="TaskUpdate" />
+                    </ProtectedRoute>
+                    ) ,
+            },
+            
         ]
     },
     {
         path: '/',
         element: <GuestLayout/>,
         children: [
-            {
-                path: '/login',
-                element: <LoginSignUp/>
-            },
+           
             {
                 path: '/signup',
                 element: <Signup/>
@@ -178,24 +207,30 @@ const router = createBrowserRouter([
         ]
     },
     {
-        path: '/user',
+        path: '/',
         element: <UserLayout/>,
         children: [
-         
-           
+            {
+                path: '/tasksUser',
+                element: <UserTaskes/>
+            },
+            {
+                path: '/tasksUser/:id',
+                element: <UserTaskesForm key="tasksUserUpdate"/>
+            },
+            
         ]
     },
+ 
+    {
+        path: '/login',
+        element: <LoginSignUp/>
+    },
+   
+
     {
         path: "*",
         element: <NotFound/>
-    },
-    {
-        path: '/google/login',
-        element: <Navigate to="/google/login" />
-    },
-    {
-        path: '/google/redirect',
-        element: <Navigate to="/google/redirect" />
     },
 ])
 

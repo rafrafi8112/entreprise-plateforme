@@ -63,7 +63,7 @@ const LoginSignUp = () => {
                     navigate('/rooms'); // Adjust the path as needed
                 } else {
                     console.log("trueeeee")
-                    navigate('/user'); // Adjust the path as needed
+                    navigate('/tasksUser'); // Adjust the path as needed
                 }
 
             })

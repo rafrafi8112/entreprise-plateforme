@@ -140,7 +140,7 @@ export default function ReservationsForm() {
           
             axiosClient.post('/reservations', reservationToSubmit)
                 .then(() => {
-                    setNotification('reservation was successfully created')
+                  
                     gapi.load('client:auth2', () => {
                         console.log('loaded client');
                     
@@ -205,6 +205,7 @@ export default function ReservationsForm() {
                       });
                     
                     console.log("old reserrvation"+reservation);
+                    setNotification('reservation was successfully created');
                 })
                 .catch(err => {
                     const response = err.response;

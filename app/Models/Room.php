@@ -13,6 +13,7 @@ class Room extends Model
         'capacity',
         'description',
         'available',
+        'image',
     ];
 
     public function reservations()
