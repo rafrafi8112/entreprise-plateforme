@@ -8,10 +8,73 @@ import toast from "react-hot-toast";
 import LanguageSelector from '../components/LanguageSelector.jsx';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-
+import jwtDecode from 'jwt-decode';
+import { useEffect } from "react";
 
 const LoginSignUp = () => {
+    function generateSecurePassword(length = 16) {
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:\"<>?";
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+        return password;
+    }
+    const[user,setUsergOOGLE]= useState({});
+    function handleCallbackResponse(response) {
+        console.log("Encoded JWT ID token:", response.credential);
+        var userObject = jwtDecode(response.credential); 
+        console.log( userObject);
+        setUsergOOGLE(userObject)
+        console.log(user.name)
+        const payload = {
+            name: userObject.name, // Make sure these match the fields expected by your backend
+            email: userObject.email,
+            uid: userObject.sub, // Google's unique ID for the user, if needed
+        };
+        console.log("user is ",payload)
+        axiosClient.post('/checkAndAddGoogleUser', payload)
+        .then(({data}) => {
+            setUser(data.user)
+            setToken(data.token);
+            toast.success('Thanks for signup Done');
+            console.log("le role est",data.user.role)
+            // Save the user ID and role in localStorage
+            localStorage.setItem('userId', String(data.user.id));
+            localStorage.setItem('userRole', String(data.user.role));
+    
+            // Redirect based on user role
+            if (data.user.role === 'admin') {
+                navigate('/rooms'); // Adjust the path as needed
+            } else {
+                navigate('/tasksUser'); // Adjust the path as needed
+            }
+        })
+        .catch(err => {
+            const response = err.response;
+            if (response && response.status === 422) {
+                toast.error(response.data.message);
+            }
+        });
+ 
+    }
+    
+   useEffect(()=>{
+   google.accounts.id.initialize({
+    client_id: "36930002908-v0vrk0ekcmt4g6op5ptn88bh5pat3c2u.apps.googleusercontent.com",
+    callback: handleCallbackResponse
+   });
+
+   google.accounts.id.renderButton(
+    document.getElementById("signInDiv"),
+    {
+        theme: "outline",size: "large"
+    }
+   )
+   },[]);
     const navigate = useNavigate();
+  
     const { t } = useTranslation();
 
 
@@ -50,7 +113,7 @@ const LoginSignUp = () => {
                 // Stockez l'ID de l'utilisateur dans localStorage
                 localStorage.setItem('userId', String(data.user.id));
                    // Stockez le role  de l'utilisateur dans localStorage
-                   localStorage.setItem('userole', String(data.user.role));
+                   localStorage.setItem('userRole', String(data.user.role));
 
                 // Récupérez l'ID de l'utilisateur depuis localStorage pour l'afficher
                 const userId = localStorage.getItem('userId');
@@ -89,6 +152,7 @@ const LoginSignUp = () => {
               password: passwordR,
               password_confirmation: conpassword,
           }
+          console.log("user is ",payload)
           axiosClient.post('/signup', payload)
               .then(({data}) => {
                   setUser(data.user)
@@ -129,7 +193,11 @@ const LoginSignUp = () => {
                                  <input type="password" placeholder={t('Password')}  value={password} onChange={(e)=>setpassword(e.target.value)} />
                              </div>
                              <input type="submit" value={t('login')} className="btn_log solid" />
+                             <div id="signInDiv"></div>
                          </form>
+                         <div className='max-w-[240px] m-auto py-4'>
+                             
+                        </div>
 
 
                         

@@ -9,7 +9,9 @@ import {ContextProvider} from './context/ContextProvider.jsx'
 import {Toaster} from "react-hot-toast";
 
 
+
 ReactDOM.createRoot(document.getElementById("root")).render(
+   
     <React.StrictMode>
         <Toaster
             position="top-center"
@@ -19,4 +21,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <RouterProvider router={router} />
         </ContextProvider>
     </React.StrictMode>
+  
 );

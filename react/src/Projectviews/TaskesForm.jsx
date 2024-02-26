@@ -72,6 +72,7 @@ export default function TaskesForm() {
       
       ev.preventDefault()
       if (task.id) {
+        console.log("le taaske est:",task)
           axiosClient.put(`/tasks/${task.id}`, task)
               .then(() => {
                   setNotification('task was successfully updated')

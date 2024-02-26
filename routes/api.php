@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/tasksUser', TaskController::class);
+    Route::patch('/tasksUser/{task}/status', [TaskController::class, 'updateStatus']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -49,4 +50,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::post('/checkAndAddGoogleUser', [AuthController::class, 'checkAndAddGoogleUser']);

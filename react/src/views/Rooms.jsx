@@ -1,135 +1,101 @@
-import {useEffect, useState} from "react";
-import {useStateContext} from "../context/ContextProvider.jsx";
-import axiosClient from "../axios-client.js";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useStateContext } from "../context/ContextProvider";
+import axiosClient from "../axios-client";
+import { Link } from "react-router-dom";
 
 export default function Rooms() {
     const [rooms, setRooms] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const {setNotification} = useStateContext()
-    //Pafination
-    const [currentPage,setCurrentPage]= useState(1)
-    const  recordsPerPage=10;
-    const lastIndex = currentPage * recordsPerPage;
-    const firstIndex = lastIndex - recordsPerPage;
-    const records = rooms.slice(firstIndex,lastIndex);
-    const npage = Math.ceil(rooms.length / recordsPerPage)
-    const numbers= [...Array(npage + 1).keys()].slice(1)
+    const [loading, setLoading] = useState(true);
+    const { setNotification } = useStateContext();
+
     useEffect(() => {
         getRooms();
-    }, [])
-
-    const onDeleteClick = room => {
-        if (!window.confirm("Are you sure you want to delete this room?")) {
-            return
-        }
-        axiosClient.delete(`/rooms/${room.id}`)
-            .then(() => {
-                setNotification('Room was successfully deleted')
-                getRooms()
-            })
-    }
+    }, []);
 
     const getRooms = () => {
-        setLoading(true)
         axiosClient.get('/rooms')
             .then(({ data }) => {
-                setLoading(false)
-                setRooms(data.data)
+                setRooms(data.data);
+                setLoading(false);
             })
             .catch(() => {
-                setLoading(false)
-            })
-    }
+                setLoading(false);
+            });
+    };
+
+    const onDeleteClick = (roomId) => {
+        if (window.confirm("Are you sure you want to delete this room?")) {
+            axiosClient.delete(`/rooms/${roomId}`)
+                .then(() => {
+                    setNotification('Room was successfully deleted');
+                    getRooms(); // Refresh the list of rooms
+                });
+        }
+    };
 
     return (
         <div>
-            <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Rooms</h1>
-                <Link className="btn-add" to="/rooms/new">Add new</Link>
+            <div style={{ display: 'flex', justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <h1 style={{ color: 'navy', fontSize: '36px', textAlign: 'center', margin: '20px 0', fontFamily: 'Arial, sans-serif' }}>
+                Rooms
+            </h1>
+                <Link to="/rooms/new">Add New Room</Link>
             </div>
-            <div className="card animated fadeInDown">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>capacity</th>
-                        <th>Availabe</th>
-                        <th>description</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    {loading &&
-                        <tbody>
-                        <tr>
-                            <td colSpan="5" class="text-center">
-                                Loading...
-                            </td>
-                        </tr>
-                        </tbody>
-                    }
-                    {!loading &&
-                        <tbody>
-
-                        {records.map(u => (
-                            <tr key={u.id}>
-                                <td>{u.id}</td>
-                                <td>{u.name}</td>
-                                <td>{u.capacity}</td>
-                                <td>
-                                    {u.available ? (
-                                        <span style={{color: 'green', fontWeight: 'bold'}}>Available</span>
-                                    ) : (
-                                        <span style={{color: 'red', fontWeight: 'bold'}}>Unavailable</span>
-                                    )}
-                                </td>
-
-                                <td>{u.description}</td>
-                                <td>
-                                    <Link className="btn-edit" to={'/rooms/' + u.id}>Edit</Link>
-                                    &nbsp;
-                                    <button className="btn-delete" onClick={ev => onDeleteClick(u)}>Delete</button>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    }
-                </table>
-                <nav>
-                    <ul className='pagination'>
-                        <li className='page-item'>
-                            <a href='#' className='page-link' onClick={prePage}>Prev</a>
-                        </li>
-                        {
-                            numbers.map((n, i) => (
-                                <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
-                                    <a href='#' className='page-link' onClick={()=>changeCPage(n)}>
-                                        {n}
-                                    </a>
-
-                                </li>
-                            ))
-                        }
-                        <li className='page-item'>
-                            <a href='#' className='page-link' onClick={nextPage}>Next</a>
-                        </li>
-                    </ul>
-                </nav>
+            {loading ? (
+                <p>Loading rooms...</p>
+            ) : (
+                <div className="rooms-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', gap: '20px' }}>
+                {rooms.map(room => (
+                    <div className="room-card" key={room.id} style={{
+                        boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+                        transition: '0.3s',
+                        width: '300px',
+                        borderRadius: '10px',
+                        overflow: 'hidden',
+                        backgroundColor: '#fff',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
+                        <img src={`../../public/images/${room.id}.jpg`} alt={room.name} style={{
+                            width: '100%',
+                            height: '200px',
+                            objectFit: 'cover'
+                        }} />
+                        <div className="room-details" style={{
+                            padding: '15px',
+                            flexGrow: '1',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between'
+                        }}>
+                            <h3 style={{ fontWeight: 'bold', marginBottom: '10px' }}>{room.name}</h3>
+                            <p><strong>Capacity:</strong> {room.capacity}</p>
+                            <p><strong>Availability:</strong> {room.available ? "Yes" : "No"}</p>
+                            <p><strong>Description:</strong> {room.description}</p>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', gap: '10px' }}>
+                                <Link to={`/rooms/${room.id}`} style={{
+                                    padding: '8px 16px',
+                                    backgroundColor: '#007bff',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    borderRadius: '5px',
+                                    textAlign: 'center'
+                                }}>Edit</Link>
+                                <button onClick={() => onDeleteClick(room.id)} style={{
+                                    padding: '8px 16px',
+                                    backgroundColor: '#dc3545',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer'
+                                }}>Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
+            
+            )}
         </div>
-    )
-    function prePage (){
-        if (currentPage !== 1){
-            setCurrentPage(currentPage - 1)
-        }
-    }
-    function changeCPage(id){
-        setCurrentPage(id)
-    }
-    function nextPage(){
-        if(currentPage !== npage){
-            setCurrentPage(currentPage +1)
-        }
-    }
+    );
 }

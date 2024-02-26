@@ -31,6 +31,7 @@ class UpdateReservationRequest extends FormRequest
             'start_time' => 'required|date|after:now',
             'end_time' => 'required|date|after:start_time',
             'name' => 'required|string|max:255',
+            'google_calendar_event_id' => 'nullable|string',    
             // Add other fields and validation rules as needed.
         ];
     }

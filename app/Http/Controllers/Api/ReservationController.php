@@ -48,4 +48,13 @@ class ReservationController extends Controller
 
         return response("", 204);
     }
+    public function getReservationById($id)
+    {
+        try {
+            $reservation = Reservation::findOrFail($id);
+            return response()->json($reservation);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Reservation not found'], 404);
+        }
+    }
 }

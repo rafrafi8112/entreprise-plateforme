@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useStateContext } from "../context/ContextProvider";
 import axiosClient from "../axios-client";
 import { Link } from "react-router-dom";
 
 export default function UserTaskes() {
     const [tasks, setTaskes] = useState([]);
     const [loading, setLoading] = useState(false);
-    const {setNotification} = useStateContext()
+  
     //Pafination
     
     useEffect(() => {
@@ -14,18 +13,7 @@ export default function UserTaskes() {
         console.log('im hereee');
     }, [])
 
-    const onDeleteClick = task => {
-        if (!window.confirm("Are you sure you want to delete this project?")) {
-            return
-        }
-        axiosClient.delete(`/tasksUser/${task.id}`)
-       
-            .then(() => {
-                setNotification('tasks was successfully deleted')
-                const updatedTasks = tasks.filter(t => t.id !== task.id);
-                setTaskes(updatedTasks);
-            })
-    }
+   
     const getUserIdFromLocalStorage = () => {
         const userId = localStorage.getItem('userId');
     if (userId) {
@@ -53,7 +41,36 @@ export default function UserTaskes() {
             setLoading(false);
         });
     }
+    const STATUSES = ['Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled'];
+
+// ...
+
+// Add a function to handle status change
+const onStatusChange = (task, newStatus) => {
+    const taskId = task.id; // Replace with the actual task ID
+    console.log('le id de taskest:',taskId)
     
+    axiosClient.patch(`/tasksUser/${taskId}/status`, { status: newStatus })
+      .then(response => {
+        console.log('Task status updated:', response.data);
+        const updatedTask = response.data;
+        
+        setTaskes(tasks.map(task => {
+        if (task.id === updatedTask.id) {
+            return updatedTask;
+            
+        }
+        return task;
+        
+    }));
+       
+        // Handle the response, update local state, etc.
+      })
+      .catch(error => {
+        console.error('Failed to update task status:', error.response);
+        // Handle the error
+      });
+};
     return (
         <div>
             <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
@@ -74,8 +91,7 @@ export default function UserTaskes() {
                         <th>Employer</th>
                         <th>Status</th>
                         <th>start_date</th>
-                       
-                        <th>Actions</th>
+                      
                     </tr>
                     </thead>
                     {loading &&
@@ -95,14 +111,15 @@ export default function UserTaskes() {
                                 <td>{u.description}</td>
                                 <td>{u.project ? u.project.name : 'No Project'}</td>
                                 <td>{u.assignedTo ? u.assignedTo.name : 'Unassigned'}</td>
-                                <td>{u.status}</td>
+                                <td>
+                                    <select value={u.status} onChange={(e) => onStatusChange(u, e.target.value)}>
+                                        {STATUSES.map(status => (
+                                            <option key={status} value={status}>{status}</option>
+                                        ))}
+                                    </select>
+                                </td>
                                 <td>{u.due_date}</td>
                               
-                                <td>
-                                    <Link className="btn-edit" to={'/tasksUser/' + u.id}>Edit</Link>
-                                    &nbsp;
-                                    <button className="btn-delete" onClick={ev => onDeleteClick(u)}>Delete</button>
-                                </td>
                             </tr>
                         ))}
                         </tbody>

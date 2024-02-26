@@ -17,6 +17,8 @@ export default function ReservationsForm() {
     let {id} = useParams();
     const [rooms, setRooms] = useState([]);
     const [users, setUsers] = useState([]);
+
+
     useEffect(() => {
         getRooms();
         getUsers();
@@ -64,6 +66,7 @@ export default function ReservationsForm() {
         start_time: '',
         end_time: '',
         name: '',
+        google_calendar_event_id:'',
         
     })
     const [errors, setErrors] = useState(null)
@@ -138,8 +141,6 @@ export default function ReservationsForm() {
         } else {
             console.log('adding reservations with data:', reservationToSubmit);
           
-            axiosClient.post('/reservations', reservationToSubmit)
-                .then(() => {
                   
                     gapi.load('client:auth2', () => {
                         console.log('loaded client');
@@ -195,6 +196,20 @@ export default function ReservationsForm() {
                         }).then((response) => {
                           // Event inserted
                           console.log('Event created: ' + response.result.htmlLink);
+                          const googleCalendarEventId = response.result.id;
+                            setReservations(prevReservation => ({
+                                ...prevReservation,
+                                google_calendar_event_id: googleCalendarEventId,
+                            }));
+
+                            // Wait for the state to update with the new Google Calendar event ID
+                            // Then submit the updated reservation data to the backend
+                            submitReservationToBackend({
+                                ...reservation,
+                                google_calendar_event_id: googleCalendarEventId, // Use the ID directly from the response
+                                user_id: getUserIdFromLocalStorage(),
+                            });
+                       
                           if (response.result.htmlLink) {
                               window.open(response.result.htmlLink, '_blank');
                             }
@@ -206,13 +221,18 @@ export default function ReservationsForm() {
                     
                     console.log("old reserrvation"+reservation);
                     setNotification('reservation was successfully created');
+              
+        }
+        function submitReservationToBackend(updatedReservation) {
+            axiosClient.post('/reservations', updatedReservation)
+                .then(() => {
+                    setNotification('Reservation was successfully created/updated');
+                    navigate('/reservations');
                 })
-                .catch(err => {
-                    const response = err.response;
-                    if (response && response.status === 422) {
-                        setErrors(response.data.errors)
-                    }
-                })
+                .catch(error => {
+                    console.error('Error submitting reservation:', error);
+                    setErrors({submit: 'Failed to create/update the reservation.'});
+                });
         }
     }
 

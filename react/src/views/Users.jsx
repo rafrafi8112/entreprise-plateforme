@@ -1,127 +1,120 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axiosClient from "../axios-client.js";
-import {Link} from "react-router-dom";
-import {useStateContext} from "../context/ContextProvider.jsx";
-
-
+import { Link } from "react-router-dom";
+import { useStateContext } from "../context/ContextProvider.jsx";
 
 export default function Users() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
-    const {setNotification} = useStateContext()
-    //Pafination
-    const [currentPage,setCurrentPage]= useState(1)
-    const  recordsPerPage=10;
+    const { setNotification } = useStateContext();
+
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 10;
     const lastIndex = currentPage * recordsPerPage;
     const firstIndex = lastIndex - recordsPerPage;
-    const records = users.slice(firstIndex,lastIndex);
-    const npage = Math.ceil(users.length / recordsPerPage)
-    const numbers= [...Array(npage + 1).keys()].slice(1)
+    const records = users.slice(firstIndex, lastIndex);
+    const npage = Math.ceil(users.length / recordsPerPage);
+    const numbers = [...Array(npage + 1).keys()].slice(1);
+
     useEffect(() => {
         getUsers();
-    }, [])
+    }, []);
 
-    const onDeleteClick = user => {
+    const onDeleteClick = (user) => {
         if (!window.confirm("Are you sure you want to delete this user?")) {
-            return
+            return;
         }
         axiosClient.delete(`/users/${user.id}`)
             .then(() => {
-                setNotification('User was successfully deleted')
-                getUsers()
-            })
-    }
+                setNotification('User was successfully deleted');
+                getUsers();
+            });
+    };
 
     const getUsers = () => {
-        setLoading(true)
+        setLoading(true);
         axiosClient.get('/users')
             .then(({ data }) => {
-                setLoading(false)
-                setUsers(data.data)
+                setLoading(false);
+                setUsers(data.data);
             })
             .catch(() => {
-                setLoading(false)
-            })
-    }
+                setLoading(false);
+            });
+    };
+
+    const prePage = () => {
+        if (currentPage !== 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const changeCPage = (id) => {
+        setCurrentPage(id);
+    };
+
+    const nextPage = () => {
+        if (currentPage !== npage) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
 
     return (
         <div>
-            <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Users</h1>
+            <div style={{ display: 'flex', justifyContent: "space-between", alignItems: "center" }}>
+                <h1 style={{ color: 'navy', fontSize: '36px', textAlign: 'center', margin: '20px 0', fontFamily: 'Arial, sans-serif' }}>Users</h1>
                 <Link className="btn-add" to="/users/new">Add new</Link>
             </div>
-            <div className="card animated fadeInDown">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Create Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    {loading &&
-                        <tbody>
-                        <tr>
-                            <td colSpan="5" class="text-center">
-                                Loading...
-                            </td>
-                        </tr>
-                        </tbody>
-                    }
-                    {!loading &&
-                        <tbody>
-                        {records.map(u => (
-                            <tr key={u.id}>
-                                <td>{u.id}</td>
-                                <td>{u.name}</td>
-                                <td>{u.email}</td>
-                                <td>{u.created_at}</td>
-                                <td>
-                                    <Link className="btn-edit" to={'/users/' + u.id}>Edit</Link>
-                                    &nbsp;
-                                    <button className="btn-delete" onClick={ev => onDeleteClick(u)}>Delete</button>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    }
-                </table>
-                <nav>
-                    <ul className='pagination'>
-                        <li className='page-item'>
-                            <a href='#' className='page-link' onClick={prePage}>Prev</a>
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', margin: '20px 0' }}>
+                    {records.map(user => (
+                        <div key={user.id} style={{ padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderRadius: '10px', width: '300px', background: 'white' }}>
+                            <div style={{ marginBottom: '10px', fontSize: '20px', fontWeight: 'bold' }}>{user.name}</div>
+                            <div style={{ marginBottom: '5px' }}><strong>Email:</strong> {user.email}</div>
+                            <div style={{ marginBottom: '5px' }}><strong>Group:</strong> {user.group}</div>
+                            <div style={{ marginBottom: '15px' }}><strong>Created At:</strong> {user.created_at}</div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Link className="btn-edit" to={'/users/' + user.id}style={{
+                                    padding: '8px 16px',
+                                    backgroundColor: '#007bff',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    borderRadius: '5px',
+                                    textAlign: 'center'
+                                }}>Edit</Link>
+                                <button className="btn-delete"  onClick={() => onDeleteClick(user)} style={{
+                                    padding: '8px 16px',
+                                    backgroundColor: '#dc3545',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer'
+                                }}>Delete</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+            <nav>
+                <ul className='pagination'>
+                    <li className='page-item'>
+                        <button className='page-link' onClick={prePage}>Prev</button>
+                    </li>
+                    {numbers.map((n, i) => (
+                        <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
+                            <button className='page-link' onClick={() => changeCPage(n)}>
+                                {n}
+                            </button>
                         </li>
-                        {
-                            numbers.map((n, i) => (
-                                <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
-                                    <a href='#' className='page-link' onClick={()=>changeCPage(n)}>
-                                        {n}
-                                    </a>
-
-                                </li>
-                            ))
-                        }
-                        <li className='page-item'>
-                            <a href='#' className='page-link' onClick={nextPage}>Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+                    ))}
+                    <li className='page-item'>
+                        <button className='page-link' onClick={nextPage}>Next</button>
+                    </li>
+                </ul>
+            </nav>
         </div>
-    )
-    function prePage (){
-        if (currentPage !== 1){
-            setCurrentPage(currentPage - 1)
-        }
-    }
-    function changeCPage(id){
-    setCurrentPage(id)
-    }
-    function nextPage(){
-    if(currentPage !== npage){
-        setCurrentPage(currentPage +1)
-    }
-    }
+    );
 }

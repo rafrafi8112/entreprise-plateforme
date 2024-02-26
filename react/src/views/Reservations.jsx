@@ -1,132 +1,120 @@
-import {useEffect, useState} from "react";
-import {useStateContext} from "../context/ContextProvider.jsx";
-import axiosClient from "../axios-client.js";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useStateContext } from "../context/ContextProvider";
+import axiosClient from "../axios-client";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { gapi } from "gapi-script";
 
 export default function Reservations() {
+    var CLIENT_ID = "36930002908-v0vrk0ekcmt4g6op5ptn88bh5pat3c2u.apps.googleusercontent.com"
+    var API_KEY = "AIzaSyC8C1H6n8YBaglVgtvBu0c6nSAYHRNNkj8"
+    var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]
+    var SCOPES = "https://www.googleapis.com/auth/calendar.events"
     const [reservations, setReservations] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const {setNotification} = useStateContext()
-    //Pafination
-    const [currentPage,setCurrentPage]= useState(1)
-    const  recordsPerPage=5;
-    const lastIndex = currentPage * recordsPerPage;
-    const firstIndex = lastIndex - recordsPerPage;
-    const records = reservations.slice(firstIndex,lastIndex);
-    const npage = Math.ceil(reservations.length / recordsPerPage)
-    const numbers= [...Array(npage + 1).keys()].slice(1)
+    const [loading, setLoading] = useState(true);
+    const { setNotification } = useStateContext();
+    const navigate = useNavigate(); // Use navigate for programmatically changing routes
+
     useEffect(() => {
         getReservations();
-    }, [])
-
-    const onDeleteClick = reservation => {
-        if (!window.confirm("Are you sure you want to delete this reservation?")) {
-            return
-        }
-        axiosClient.delete(`/reservations/${reservation.id}`)
-            .then(() => {
-                setNotification('reservation was successfully deleted')
-                getReservations()
-            })
-    }
+        console.log("les reservation sont",)
+    }, []);
 
     const getReservations = () => {
-        setLoading(true)
+        setLoading(true);
         axiosClient.get('/reservations')
             .then(({ data }) => {
-                console.log("reservations",data)
-                setLoading(false)
-                setReservations(data.data)
+                setLoading(false);
+                setReservations(data.data);
             })
             .catch(() => {
-                setLoading(false)
-            })
+                setLoading(false);
+            });
+    };
 
-    }
+    const onDeleteClick = (reservationId) => {
+        console.log("la reservation id est",reservationId)
+        const reservationIdInt = parseInt(reservationId, 10); // Convert to integer if necessary
+        const reservation = reservations.find(r => r.id === reservationIdInt);
+        console.log("la reservation est",reservation)
+        if (reservation && window.confirm("Are you sure you want to delete this reservation?")) {
+            // First, attempt to delete from Google Calendar
+            const googleCalendarEventId = reservation.google_calendar_event_id;
+            if (googleCalendarEventId) {
+                gapi.load('client:auth2', () => {
+                    gapi.client.init({
+                        apiKey: API_KEY,
+                        clientId: CLIENT_ID,
+                        discoveryDocs: DISCOVERY_DOCS,
+                        scope: SCOPES,
+                    }).then(() => {
+                        return gapi.client.load('calendar', 'v3');
+                    }).then(() => {
+                        return gapi.auth2.getAuthInstance().signIn();
+                    }).then(() => {
+                        return gapi.client.calendar.events.delete({
+                            'calendarId': 'primary',
+                            'eventId': googleCalendarEventId,
+                        });
+                    }).then(() => {
+                        console.log('Event deleted from Google Calendar');
+                        // Now delete the reservation from the database
+                        axiosClient.delete(`/reservations/${reservationId}`)
+                            .then(() => {
+                                setNotification('Reservation was successfully deleted from both Google Calendar and database');
+                                getReservations(); // Refresh the list of reservations
+                            }).catch((error) => {
+                                console.error('Error deleting reservation from database:', error);
+                            });
+                    }).catch((error) => {
+                        console.error('Error deleting event from Google Calendar:', error);
+                    });
+                });
+            } else {
+                console.error('Google Calendar event ID not found for reservation');
+            }
+        }
+    };
+
+    // Convert reservations to events for FullCalendar
+    const calendarEvents = reservations.map(reservation => ({
+        id: reservation.id,
+        title: reservation.name,
+        start: reservation.start_time,
+        end: reservation.end_timen
+   
+    }));
+
+    // Handle event click
+    const handleEventClick = ({ event }) => {
+        const reservationId = event.id;
+        const confirmation = window.confirm("Do you want to modify or delete this reservation? Click OK to delete.");
+
+        if (confirmation) {
+            onDeleteClick(reservationId);
+        } else {
+            // Navigate to edit page, if you prefer editing over immediate deletion
+            navigate(`/reservations/${reservationId}`);
+        }
+    };
 
     return (
         <div>
-            <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Reservations</h1>
+            <div style={{ display: 'flex', justifyContent: "space-between", alignItems: "center" }}>
+            <h1 style={{ color: 'navy', fontSize: '36px', textAlign: 'center', margin: '20px 0', fontFamily: 'Arial, sans-serif' }}>
+  CALENDAR
+</h1>
                 <Link className="btn-add" to="/reservations/new">Add new</Link>
             </div>
-            <div className="card animated fadeInDown">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>start_time</th>
-
-                        <th>end_time</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    {loading &&
-                        <tbody>
-                        <tr>
-                            <td colSpan="5" class="text-center">
-                                Loading...
-                            </td>
-                        </tr>
-                        </tbody>
-                    }
-                    {!loading &&
-                        <tbody>
-
-                        {records.map(u => (
-
-
-                            <tr key={u.id}>
-                                <td>{u.id}</td>
-                                <td>{u.name}</td>
-                                <td>{u.start_time}</td>
-                                <td>{u.end_time}</td>
-
-                                <td>
-                                    <Link className="btn-edit" to={'/reservations/' + u.id}>Edit</Link>
-                                    &nbsp;
-                                    <button className="btn-delete" onClick={ev => onDeleteClick(u)}>Delete</button>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    }
-                </table>
-                <nav>
-                    <ul className='pagination'>
-                        <li className='page-item'>
-                            <a href='#' className='page-link' onClick={prePage}>Prev</a>
-                        </li>
-                        {
-                            numbers.map((n, i) => (
-                                <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
-                                    <a href='#' className='page-link' onClick={()=>changeCPage(n)}>
-                                        {n}
-                                    </a>
-
-                                </li>
-                            ))
-                        }
-                        <li className='page-item'>
-                            <a href='#' className='page-link' onClick={nextPage}>Next</a>
-                        </li>
-                    </ul>
-                </nav>
+            <div className="calendar-view">
+                <FullCalendar
+                    plugins={[dayGridPlugin]}
+                    initialView="dayGridMonth"
+                    events={calendarEvents}
+                    eventClick={handleEventClick} // Add eventClick here
+                />
             </div>
         </div>
-    )
-    function prePage (){
-        if (currentPage !== 1){
-            setCurrentPage(currentPage - 1)
-        }
-    }
-    function changeCPage(id){
-        setCurrentPage(id)
-    }
-    function nextPage(){
-        if(currentPage !== npage){
-            setCurrentPage(currentPage +1)
-        }
-    }
+    );
 }

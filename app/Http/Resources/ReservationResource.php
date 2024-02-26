@@ -21,6 +21,7 @@ class ReservationResource extends JsonResource
             'name'=>$this->name,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
+            'google_calendar_event_id' => $this->google_calendar_event_id,
             'user' => new UserResource($this->whenLoaded('user')),
             'room' => new RoomResource($this->whenLoaded('room')),
         ];

@@ -2,7 +2,7 @@ import {Link, Navigate, Outlet} from "react-router-dom";
 import {useStateContext} from "../context/ContextProvider";
 import axiosClient from "../axios-client.js";
 
-import {FaHome, FaUsers} from "react-icons/fa";
+import {FaHome, FaTasks, FaUsers} from "react-icons/fa";
 import { MdRoomPreferences } from "react-icons/md";
 import {BsCalendarDateFill} from "react-icons/bs";
 
@@ -29,7 +29,7 @@ export default function UserLayout() {
             <aside>
                 <h2 id="heside"style={{ color:'white'}}>TAC-TIC</h2>
                 <Link to="/tasksUser" ><FaHome style={{ width: '20px', height: '20px' }}/> Dashboard</Link>
-                <Link to="/tasksUser" ><FaHome style={{ width: '20px', height: '20px' }}/> Dashboard</Link>
+                <Link to="/tasksUser" ><FaTasks style={{ width: '20px', height: '20px' }}/> TasksUser</Link>
                 
             </aside>
             <div className="content">
