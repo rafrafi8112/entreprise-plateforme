@@ -11,7 +11,7 @@ import RoomForm from "./views/RoomForm.jsx";
 import LoginSignUp from "./views/LoginSignUp.jsx";
 import Reservations from "./views/Reservations.jsx";
 import ReservationsForm from "./views/ReservationsForm.jsx";
-import UserLayout from "./components/UserLayout.jsx";
+
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Projects from "./Projectviews/Projects.jsx";
 import ProjectsForm from "./Projectviews/ProjectsForm.jsx";
@@ -21,7 +21,11 @@ import Taskes from "./Projectviews/Taskes.jsx";
 import TaskesForm from "./Projectviews/TaskesForm.jsx";
 import UserTaskes from "./Projectviews/UserTaskes.jsx";
 import UserTaskesForm from "./Projectviews/UserTaskesForm.jsx";
+import Vehicle from "./Vehicleviews/Vehicle.jsx";
+import VehicleForm from "./Vehicleviews/VehicleForm.jsx";
+import Board from "./Projectviews/components/Board.jsx";
 
+import EmployerLayout from "./components/EmployerLayout.jsx";
 
 const router = createBrowserRouter([
     {
@@ -191,6 +195,31 @@ const router = createBrowserRouter([
                     </ProtectedRoute>
                     ) ,
             },
+            {
+                path: '/vehicles',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                          <Vehicle/>
+                    </ProtectedRoute>
+                    ) ,
+            },
+            {
+                path: '/vehicles/new',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <VehicleForm key="VehicleCreate" />
+                    </ProtectedRoute>
+                    ) ,
+                
+            },
+            {
+                path: '/vehicles/:id',
+                element:(
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        element: <VehicleForm key="VehicleUpdate" />
+                    </ProtectedRoute>
+                    ) ,
+            },
             
         ]
     },
@@ -208,7 +237,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/',
-        element: <UserLayout/>,
+        element: <EmployerLayout/>,
         children: [
             {
                 path: '/tasksUser',
@@ -228,6 +257,11 @@ const router = createBrowserRouter([
     },
    
 
+    {
+        path: "/Board",
+        element: <Board/>
+    },
+   
     {
         path: "*",
         element: <NotFound/>

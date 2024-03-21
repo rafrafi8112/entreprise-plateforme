@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../axios-client";
 import { Link } from "react-router-dom";
-
+import Board from "./userTaskestodo/Board";
 export default function UserTaskes() {
     const [tasks, setTaskes] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -73,61 +73,9 @@ const onStatusChange = (task, newStatus) => {
 };
     return (
         <div>
-            <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Taskes 
-
-
-                </h1>
-                <Link className="btn-add" to="/tasksUser/new">Add new</Link>
-            </div>
-            <div className="card animated fadeInDown">
-                <table>
-                    <thead>
-                    <tr>
-                        
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Project</th>
-                        <th>Employer</th>
-                        <th>Status</th>
-                        <th>start_date</th>
-                      
-                    </tr>
-                    </thead>
-                    {loading &&
-                        <tbody>
-                        <tr>
-                            <td colSpan="5" className="text-center">
-                                Loading...
-                            </td>
-                        </tr>
-                        </tbody>
-                    }
-                    {!loading &&
-                        <tbody>
-                        {tasks.map(u => (
-                            <tr key={u.id}>
-                                <td>{u.name}</td>
-                                <td>{u.description}</td>
-                                <td>{u.project ? u.project.name : 'No Project'}</td>
-                                <td>{u.assignedTo ? u.assignedTo.name : 'Unassigned'}</td>
-                                <td>
-                                    <select value={u.status} onChange={(e) => onStatusChange(u, e.target.value)}>
-                                        {STATUSES.map(status => (
-                                            <option key={status} value={status}>{status}</option>
-                                        ))}
-                                    </select>
-                                </td>
-                                <td>{u.due_date}</td>
-                              
-                            </tr>
-                        ))}
-                        </tbody>
-                    }
-                </table>
-                
-            </div>
+                   <Board /> 
         </div>
+
     )
     
 }

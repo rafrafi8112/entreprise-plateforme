@@ -12,14 +12,11 @@ import {Toaster} from "react-hot-toast";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
    
-    <React.StrictMode>
-        <Toaster
-            position="top-center"
-            reverseOrder={false}
-        />
-        <ContextProvider>
-            <RouterProvider router={router} />
-        </ContextProvider>
-    </React.StrictMode>
+    <>
+    <Toaster position="top-center" reverseOrder={false} />
+    <ContextProvider>
+      <RouterProvider router={router} />
+    </ContextProvider>
+  </>
   
 );

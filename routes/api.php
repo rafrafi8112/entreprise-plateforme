@@ -7,12 +7,15 @@ use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\ProjectMemberController;
 use App\Http\Controllers\Api\TaskController;
-
+use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Auth\SocialController;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use ErlandMuchasaj\LaravelFileUploader\FileUploader;
+use App\Http\Controllers\FileController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +31,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/tasksUser', TaskController::class);
-    Route::patch('/tasksUser/{task}/status', [TaskController::class, 'updateStatus']);
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::apiResource('/tasks', TaskController::class);
+    
     Route::middleware('isAdmin')->group(function () {
         Route::apiResource('/users', UserController::class);
         Route::apiResource('/rooms', RoomController::class);
@@ -39,7 +40,9 @@ Route::middleware('auth:sanctum')->group(function () {
         
         Route::apiResource('/projects', ProjectController::class);
         Route::apiResource('/project-members', ProjectMemberController::class);
-        Route::apiResource('/tasks', TaskController::class);
+        
+
+        Route::apiResource('/vehicles', VehicleController::class);
         
     });
 
@@ -47,7 +50,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 });
-
+Route::get('/user', function (Request $request) {
+    return $request->user();
+});
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/checkAndAddGoogleUser', [AuthController::class, 'checkAndAddGoogleUser']);
+    // visualize the form
+
+Route::post('/upload', [RoomController::class, 'upload'])->name('files.store');
+Route::get('/api/files/{filename}', [FileController::class, 'show']);
+  

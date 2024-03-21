@@ -27,6 +27,7 @@ class UpdateRoomRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'capacity' => 'sometimes|required|integer|min:1',
+            'image' => 'required|string|max:255',
             'available' => 'sometimes|boolean',
             // Add other fields and validation rules as needed.
         ];

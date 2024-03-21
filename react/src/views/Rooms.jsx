@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useStateContext } from "../context/ContextProvider";
 import axiosClient from "../axios-client";
 import { Link } from "react-router-dom";
-
+import Loading from './Loading'; 
 export default function Rooms() {
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ export default function Rooms() {
 
     useEffect(() => {
         getRooms();
-    }, []);
+    }, [rooms]);
 
     const getRooms = () => {
         axiosClient.get('/rooms')
@@ -42,7 +42,7 @@ export default function Rooms() {
                 <Link to="/rooms/new">Add New Room</Link>
             </div>
             {loading ? (
-                <p>Loading rooms...</p>
+              <Loading message="Loading rooms..." />
             ) : (
                 <div className="rooms-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', gap: '20px' }}>
                 {rooms.map(room => (
@@ -56,7 +56,7 @@ export default function Rooms() {
                         display: 'flex',
                         flexDirection: 'column'
                     }}>
-                        <img src={`../../public/images/${room.id}.jpg`} alt={room.name} style={{
+                        <img src={room.image} alt={room.name} style={{
                             width: '100%',
                             height: '200px',
                             objectFit: 'cover'

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df5157c04a859db5123e1e98a572f711",
+    "content-hash": "2ec181f202995ef7a0f1cea53262ad70",
     "packages": [
         {
             "name": "brick/math",
@@ -500,6 +500,91 @@
                 }
             ],
             "time": "2023-10-06T06:47:41+00:00"
+        },
+        {
+            "name": "erlandmuchasaj/laravel-file-uploader",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/erlandmuchasaj/laravel-file-uploader.git",
+                "reference": "9841bb092c381996cb5880a0f7d2abaaaaed1816"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/erlandmuchasaj/laravel-file-uploader/zipball/9841bb092c381996cb5880a0f7d2abaaaaed1816",
+                "reference": "9841bb092c381996cb5880a0f7d2abaaaaed1816",
+                "shasum": ""
+            },
+            "require": {
+                "ext-exif": "*",
+                "ext-fileinfo": "*",
+                "ext-json": "*",
+                "illuminate/contracts": "^8|^9|^10",
+                "illuminate/filesystem": "^8|^9|^10",
+                "illuminate/http": "^8|^9|^10",
+                "illuminate/support": "^8|^9|^10",
+                "nesbot/carbon": "^2",
+                "php": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ErlandMuchasaj\\LaravelFileUploader\\FileUploaderServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ErlandMuchasaj\\LaravelFileUploader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erland Muchasaj",
+                    "email": "erland.muchasaj@gmail.com",
+                    "homepage": "https://erlandmuchasaj.tech/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple package to help you easily upload files to your laravel project.",
+            "homepage": "https://github.com/erlandmuchasaj/laravel-file-uploader",
+            "keywords": [
+                "cms",
+                "emcms",
+                "file",
+                "images",
+                "laravel",
+                "library",
+                "media",
+                "package",
+                "upload"
+            ],
+            "support": {
+                "email": "erland.muchasaj@gmail.com",
+                "irc": "irc://irc.freenode.org/composer",
+                "issues": "https://github.com/erlandmuchasaj/laravel-file-uploader/issues",
+                "source": "https://github.com/erlandmuchasaj/laravel-file-uploader"
+            },
+            "funding": [
+                {
+                    "url": "https://ko-fi.com/erlandmuchasaj",
+                    "type": "Ko-fi"
+                },
+                {
+                    "url": "https://paypal.me/emcms?country.x=AL&locale.x=en_US",
+                    "type": "PayPal"
+                },
+                {
+                    "url": "https://www.patreon.com/erlandmuchasaj",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2023-07-11T09:35:24+00:00"
         },
         {
             "name": "fruitcake/php-cors",

@@ -389,3 +389,32 @@ input {
       left: 50%;
     }
   }
+/* Logout Button Style */
+.logout-button {
+  background: #2c3e50; /* Dark shade for the button background */
+  color: #fff; /* White text color */
+  border: none; /* No border */
+  padding: 10px 20px; /* Padding inside the button */
+  cursor: pointer; /* Cursor to pointer to indicate it's clickable */
+  text-transform: uppercase; /* Uppercase text */
+  font-weight: bold; /* Bold text font */
+  border-radius: 4px; /* Rounded corners */
+  width: 100%; /* Make the button expand to the full width */
+  box-sizing: border-box; /* Ensure padding doesn't affect the final width */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+  margin-top: auto; /* Push the button to the bottom */
+  margin-bottom: 20px; /* Margin at the bottom */
+}
+
+.logout-button:hover {
+  background-color: #e74c3c; /* Color change on hover */
+}
+
+/* This ensures that the aside container stretches flexibly with content */
+aside {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  justify-content: space-between; /* Push footer to the bottom */
+  height: 100vh; /* Full height to push footer down */
+  padding-bottom: 20px; /* Padding at the bottom */
+}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 import axiosClient from "../axios-client";
-
+import Loading from '../views/Loading'; 
 export default function ProjectMembers() {
     const [projectMembers, setProjectMembers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export default function ProjectMembers() {
                 <Link to="/project-members/new">Add new</Link>
             </div>
             {loading ? (
-                <div>Loading...</div>
+                <Loading message="Loading Project Members..." />
             ) : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
                     {projectMembers.map(member => (

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 import axiosClient from "../axios-client";
-
+import Board from "./components/Board";
+import Loading from "../views/Loading"
 export default function Projects() {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -34,6 +35,7 @@ export default function Projects() {
         setLoading(true);
         axiosClient.get('/projects')
             .then(({ data }) => {
+                console.log('eeeeeeeeeeeeeee',data.data)
                 setLoading(false);
                 setProjects(data.data);
             })
@@ -48,61 +50,18 @@ export default function Projects() {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: "space-between", alignItems: "center" }}>
-                <h1>Projects</h1>
+             <div style={{ display: 'flex', justifyContent: "space-between", alignItems: "center" }}>
+                <h1></h1>
                 <Link to="/projects/new">Add new</Link>
             </div>
+             
+           
             {loading ? (
-                <div>Loading...</div>
+                <Loading message="Loading Projects..." />
             ) : (
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
-                    {currentRecords.map(project => (
-                        <div key={project.id} style={{ padding: '20px', boxShadow: '0 2px 4px rgba(0,0,0,.2)', borderRadius: '5px', width: '300px', background: 'white', margin: '10px' }}>
-                            <h3>{project.name}</h3>
-                            <p>Description: {project.description}</p>
-                            <p>Manager ID: {project.manager_id}</p>
-                            <p>Status: {project.status}</p>
-                            <p>Start Date: {project.start_date}</p>
-                            <p>End Date: {project.end_date}</p>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                                <Link to={`/projects/${project.id}`}style={{
-                                    padding: '8px 16px',
-                                    backgroundColor: '#007bff',
-                                    color: 'white',
-                                    textDecoration: 'none',
-                                    borderRadius: '5px',
-                                    textAlign: 'center'
-                                }}>Edit</Link>
-                                <button onClick={() => onDeleteClick(project)}style={{
-                                    padding: '8px 16px',
-                                    backgroundColor: '#dc3545',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer'
-                                }}>Delete</button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <Board />
             )}
-            <nav style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                <ul className='pagination'>
-                    <li className='page-item'>
-                        <button className='page-link' onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Prev</button>
-                    </li>
-                    {pageNumbers.map(number => (
-                        <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
-                            <button className='page-link' onClick={() => handlePageChange(number)}>
-                                {number}
-                            </button>
-                        </li>
-                    ))}
-                    <li className='page-item'>
-                        <button className='page-link' onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === npage}>Next</button>
-                    </li>
-                </ul>
-            </nav>
+          
         </div>
     );
 }

@@ -119,9 +119,9 @@ export default function ProjectsForm() {
                         <select className="select-room" value={project.group} onChange={ev => seProject({...project, status: ev.target.value})}>
                         <option value="" className="select-room">Status</option>
                           <option value="Completed">Completed</option>
-                          <option value="On Hold">On Hold</option>
-                          <option value="Cancelled">Cancelled</option>
-                        
+                          <option value="ToDo">ToDo</option>
+                          <option value="Backlog">Backlog</option>
+                          <option value="InReview">InReview</option>
                       </select>
                       <input type="datetime-local" value={project.start_date}
                                onChange={ev => seProject({...project, start_date: ev.target.value})}

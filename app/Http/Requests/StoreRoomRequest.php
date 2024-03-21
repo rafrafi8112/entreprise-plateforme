@@ -29,6 +29,7 @@ class StoreRoomRequest extends FormRequest
             'name' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
             'description' => 'required|string|max:255',
+            'image' => 'required|string|max:255',
             'available' => 'boolean',
             // Ajoutez d'autres règles de validation selon vos besoins
         ];
